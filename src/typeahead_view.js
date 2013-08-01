@@ -99,7 +99,7 @@ var TypeaheadView = (function() {
     .on('tabKeyed upKeyed downKeyed', this._managePreventDefault)
     .on('upKeyed downKeyed', this._moveDropdownCursor)
     .on('upKeyed downKeyed', this._openDropdown)
-    .on('tabKeyed leftKeyed rightKeyed', this._autocomplete);
+    .on('enterKeyed tabKeyed leftKeyed rightKeyed', this._autocomplete);
   }
 
   utils.mixin(TypeaheadView.prototype, EventTarget, {
@@ -217,7 +217,9 @@ var TypeaheadView = (function() {
         byClick && utils.isMsie() ?
           utils.defer(this.dropdownView.close) : this.dropdownView.close();
 
-        this.eventBus.trigger('selected', suggestion.datum, suggestion.dataset);
+        var triggeredHow = byClick ?
+          'click' : e.type.replace(/Keyed$/, '');
+        this.eventBus.trigger('selected', suggestion.datum, suggestion.dataset, triggeredHow);
       }
     },
 
